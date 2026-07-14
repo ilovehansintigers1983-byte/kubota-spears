@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0d1b3e">
+<title>クボタスピアーズ船橋・東京ベイ 特設ページ</title>
+<style>
+  :root {
+    --navy: #0d1b3e;
+    --navy2: #16295c;
+    --orange: #f36f21;
+    --orange-light: #ff8c42;
+    --white: #ffffff;
+    --gray: #8892ab;
+    --card-bg: #ffffff;
+    --page-bg: #f2f4f9;
+    --text: #1a2340;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", sans-serif;
+    background: var(--page-bg);
+    color: var(--text);
+  }
+
+  /* ===== Hero ===== */
+  .hero {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy2) 55%, #1e3a7a 100%);
+    color: var(--white);
+    padding: 56px 20px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    top: -60px; right: -80px;
+    width: 420px; height: 420px;
+    background: linear-gradient(135deg, var(--orange), transparent 70%);
+    opacity: .25;
+    transform: rotate(25deg);
+    clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  }
+  .hero-inner { max-width: 1100px; margin: 0 auto; position: relative; }
+  .hero .league { color: var(--orange-light); font-weight: bold; letter-spacing: .18em; font-size: 13px; }
+  .hero h1 { font-size: clamp(26px, 5vw, 44px); margin: 10px 0 4px; line-height: 1.2; }
+  .hero .en-name { color: var(--gray); font-size: clamp(12px, 2vw, 16px); letter-spacing: .15em; }
+  .hero p.lead { margin-top: 18px; font-size: 15px; line-height: 1.9; max-width: 640px; color: #d7ddeb; }
+  .facts { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+  .fact {
+    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.18);
+    border-radius: 999px;
+    padding: 7px 16px;
+    font-size: 13px;
+  }
+  .fact b { color: var(--orange-light); margin-right: 6px; font-weight: bold; }
+
+  /* ===== News ===== */
+  .news-sec { background: var(--white); border-bottom: 1px solid #e1e5ef; }
+  .news-inner { max-width: 1100px; margin: 0 auto; padding: 22px 16px 26px; }
+  .news-list { list-style: none; }
+  .news-list li { border-bottom: 1px dashed #e1e5ef; }
+  .news-list a {
+    display: flex; align-items: baseline; gap: 14px;
+    padding: 10px 4px;
+    text-decoration: none; color: var(--text);
+    font-size: 14px; line-height: 1.6;
+  }
+  .news-list a:hover .n-title { color: var(--orange); text-decoration: underline; }
+  .n-date { color: var(--orange); font-weight: bold; font-size: 12.5px; white-space: nowrap; font-family: Consolas, monospace; }
+  .n-src { color: var(--gray); font-size: 11px; white-space: nowrap; }
+  .n-title { flex: 1; }
+  .news-note { font-size: 11px; color: var(--gray); margin-top: 10px; text-align: right; }
+  .news-loading { color: var(--gray); font-size: 13px; padding: 10px 4px; }
+
+  /* ===== Filter bar ===== */
+  .toolbar {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(255,255,255,.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid #e1e5ef;
+    padding: 10px 16px;
+  }
+  .toolbar-inner { max-width: 1100px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .tabs { display: flex; flex-wrap: wrap; gap: 6px; flex: 1; }
+  .tab {
+    border: 1px solid #d4d9e6;
+    background: var(--white);
+    color: var(--text);
+    border-radius: 999px;
+    padding: 6px 13px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all .15s;
+    white-space: nowrap;
+  }
+  .tab:hover { border-color: var(--orange); color: var(--orange); }
+  .tab.active { background: var(--navy); color: var(--white); border-color: var(--navy); }
+  .tab .cnt { font-size: 11px; opacity: .65; margin-left: 3px; }
+  .search {
+    border: 1px solid #d4d9e6;
+    border-radius: 999px;
+    padding: 7px 16px;
+    font-size: 14px;
+    width: 210px;
+    outline: none;
+  }
+  .search:focus { border-color: var(--orange); }
+
+  /* ===== Grid ===== */
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 26px 16px 60px; }
+  .section-title { display: flex; align-items: baseline; gap: 12px; margin: 30px 0 14px; }
+  .section-title .en { font-size: 26px; font-weight: 900; color: var(--navy); letter-spacing: .04em; }
+  .section-title .jp { font-size: 14px; color: var(--gray); }
+  .section-title::after { content: ""; flex: 1; height: 3px; background: linear-gradient(90deg, var(--orange), transparent); border-radius: 2px; }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 14px;
+  }
+  .card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    box-shadow: 0 1px 4px rgba(13,27,62,.10);
+    transition: transform .15s, box-shadow .15s;
+    position: relative;
+  }
+  .card:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(13,27,62,.18); }
+  .card .ph { width: 100%; aspect-ratio: 3/3.4; object-fit: cover; object-position: top; display: block; background: #dde2ee; }
+  .card .pos-badge {
+    position: absolute; top: 8px; left: 8px;
+    background: var(--navy);
+    color: var(--white);
+    font-size: 11px; font-weight: bold;
+    padding: 3px 9px;
+    border-radius: 4px;
+    letter-spacing: .05em;
+  }
+  .card .cap-badge {
+    position: absolute; top: 8px; right: 8px;
+    background: var(--orange);
+    color: var(--white);
+    font-size: 11px; font-weight: bold;
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+  .card .info { padding: 10px 12px 12px; }
+  .card .nm { font-size: 15px; font-weight: bold; line-height: 1.3; }
+  .card .enm { font-size: 10px; color: var(--gray); letter-spacing: .06em; margin-top: 2px; text-transform: uppercase; }
+  .card .hw { font-size: 11.5px; color: #5a6584; margin-top: 6px; }
+  .empty { text-align: center; color: var(--gray); padding: 60px 0; font-size: 15px; }
+
+  /* ===== Modal ===== */
+  .overlay {
+    position: fixed; inset: 0;
+    background: rgba(10,16,38,.72);
+    display: none;
+    align-items: center; justify-content: center;
+    z-index: 100;
+    padding: 18px;
+  }
+  .overlay.show { display: flex; }
+  .modal {
+    background: var(--white);
+    border-radius: 16px;
+    max-width: 760px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: row;
+  }
+  .modal .m-photo { width: 42%; flex-shrink: 0; position: relative; }
+  .modal .m-photo img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; min-height: 340px; }
+  .modal .m-photo .grad {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(13,27,62,.55), transparent 45%);
+  }
+  .modal .m-body { padding: 26px 26px 30px; flex: 1; }
+  .m-pos { display: inline-block; background: var(--navy); color: var(--white); font-size: 12px; font-weight: bold; padding: 4px 12px; border-radius: 4px; letter-spacing: .06em; }
+  .m-cap { display: inline-block; background: var(--orange); color: var(--white); font-size: 12px; font-weight: bold; padding: 4px 10px; border-radius: 4px; margin-left: 6px; }
+  .m-name { font-size: 26px; font-weight: 900; margin-top: 12px; line-height: 1.25; }
+  .m-en { color: var(--gray); font-size: 12px; letter-spacing: .12em; margin-top: 3px; text-transform: uppercase; }
+  .m-table { width: 100%; border-collapse: collapse; margin-top: 18px; font-size: 14px; }
+  .m-table th, .m-table td { text-align: left; padding: 9px 4px; border-bottom: 1px solid #edf0f6; vertical-align: top; }
+  .m-table th { color: var(--gray); font-weight: normal; white-space: nowrap; width: 88px; font-size: 12.5px; }
+  .m-link { display: inline-block; margin-top: 16px; font-size: 13px; color: var(--orange); text-decoration: none; font-weight: bold; }
+  .m-link:hover { text-decoration: underline; }
+  .m-close {
+    position: absolute; top: 14px; right: 18px;
+    background: rgba(255,255,255,.92);
+    border: none; border-radius: 50%;
+    width: 36px; height: 36px;
+    font-size: 17px; cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,.25);
+  }
+  .modal-shell { position: relative; max-width: 760px; width: 100%; }
+
+  footer {
+    background: var(--navy);
+    color: #aab3c9;
+    text-align: center;
+    padding: 26px 16px;
+    font-size: 12px;
+    line-height: 2;
+  }
+  footer a { color: var(--orange-light); }
+
+  @media (max-width: 620px) {
+    .hero { padding: 36px 18px 28px; }
+    .hero p.lead { font-size: 13.5px; }
+    .fact { font-size: 12px; padding: 6px 12px; }
+    .modal { flex-direction: column; }
+    .modal .m-photo { width: 100%; }
+    .modal .m-photo img { min-height: 0; max-height: 330px; }
+    .modal .m-body { padding: 20px 18px 24px; }
+    .m-name { font-size: 22px; }
+    .grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .search { width: 100%; }
+    .tabs {
+      flex-wrap: nowrap; overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 4px;
+      scrollbar-width: none;
+    }
+    .tabs::-webkit-scrollbar { display: none; }
+    .news-list a { flex-wrap: wrap; gap: 4px 10px; padding: 10px 2px; }
+    .n-title { flex: 1 1 100%; order: 3; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+    <div class="league">JAPAN RUGBY LEAGUE ONE — DIVISION 1</div>
+    <h1>クボタスピアーズ船橋・東京ベイ</h1>
+    <div class="en-name">KUBOTA SPEARS FUNABASHI TOKYO-BAY</div>
+    <p class="lead">
+      「土とともに、心をひとつに」。千葉県船橋市・東京ベイエリアをホストエリアとする
+      ジャパンラグビー リーグワンの強豪チーム。2022-23シーズンにはリーグワン初優勝を果たした。
+      世界的スターと日本代表クラスがそろう全60選手を紹介！
+    </p>
+    <div class="facts">
+      <div class="fact"><b>創部</b>1978年</div>
+      <div class="fact"><b>ホストエリア</b>千葉県船橋市・東京ベイ</div>
+      <div class="fact"><b>主なタイトル</b>リーグワン優勝（2022-23）</div>
+      <div class="fact"><b>ヘッドコーチ</b>フラン・ルディケ</div>
+      <div class="fact"><b>キャプテン</b>マキシ ファウルア</div>
+    </div>
+  </div>
+</header>
+
+<section class="news-sec">
+  <div class="news-inner">
+    <div class="section-title" style="margin-top:0"><span class="en">NEWS</span><span class="jp">最新ニュース</span></div>
+    <ul class="news-list" id="newsList"><li class="news-loading">ニュースを読み込み中…</li></ul>
+    <div class="news-note">出典：Google ニュース検索「クボタスピアーズ」／
+      <a href="https://www.kubota-spears.com/news/" target="_blank" rel="noopener" style="color:var(--orange)">公式ニュース一覧はこちら</a>
+    </div>
+  </div>
+</section>
+
+<nav class="toolbar">
+  <div class="toolbar-inner">
+    <div class="tabs" id="tabs"></div>
+    <input type="text" class="search" id="search" placeholder="選手名で検索…">
+  </div>
+</nav>
+
+<main class="wrap" id="main"></main>
+
+<div class="overlay" id="overlay">
+  <div class="modal-shell">
+    <button class="m-close" id="mClose">✕</button>
+    <div class="modal" id="modal"></div>
+  </div>
+</div>
+
+<footer>
+  ファン制作の非公式特設ページです。選手データ・写真の出典：
+  <a href="https://www.kubota-spears.com/player/" target="_blank" rel="noopener">クボタスピアーズ公式サイト 選手名鑑</a><br>
+  データ取得日：2026年7月13日
+</footer>
+
+<script src="players.js"></script>
+<script src="news.js"></script>
+<script>
+const POS_LABELS = {
+  "PR": "プロップ", "HO": "フッカー", "LO": "ロック", "FL": "フランカー",
+  "No.8": "ナンバーエイト", "SH": "スクラムハーフ", "SO": "スタンドオフ",
+  "CTB": "センター", "WTB": "ウイング", "FB": "フルバック"
+};
+const POS_ORDER = ["PR","HO","LO","FL","No.8","SH","SO","CTB","WTB","FB"];
+const CAPTAIN_ID = "faulua_makisi";
+
+let curPos = "ALL";
+let query = "";
+
+function age(birth) {
+  if (!birth) return null;
+  const m = birth.match(/(\d{4})\.(\d{1,2})\.(\d{1,2})/);
+  if (!m) return null;
+  const b = new Date(+m[1], +m[2]-1, +m[3]);
+  const now = new Date();
+  let a = now.getFullYear() - b.getFullYear();
+  if (now.getMonth() < b.getMonth() || (now.getMonth() === b.getMonth() && now.getDate() < b.getDate())) a--;
+  return a;
+}
+
+function buildTabs() {
+  const tabs = document.getElementById("tabs");
+  const mk = (key, label, count) => {
+    const btn = document.createElement("button");
+    btn.className = "tab" + (key === curPos ? " active" : "");
+    btn.innerHTML = label + (count != null ? `<span class="cnt">${count}</span>` : "");
+    btn.onclick = () => { curPos = key; render(); buildTabs(); };
+    return btn;
+  };
+  tabs.innerHTML = "";
+  tabs.appendChild(mk("ALL", "全選手", PLAYERS.length));
+  POS_ORDER.forEach(p => {
+    const n = PLAYERS.filter(x => x.group === p).length;
+    tabs.appendChild(mk(p, p, n));
+  });
+}
+
+function matches(p) {
+  if (curPos !== "ALL" && p.group !== curPos) return false;
+  if (query) {
+    const q = query.toLowerCase();
+    const hay = (p.ja + p.en + (p.nick||"")).toLowerCase().replace(/\s/g,"");
+    if (!hay.includes(q.replace(/\s/g,""))) return false;
+  }
+  return true;
+}
+
+function cardHTML(p) {
+  const cap = p.id === CAPTAIN_ID ? `<span class="cap-badge">CAPTAIN</span>` : "";
+  return `
+    <div class="card" onclick="openModal('${p.id}')">
+      <span class="pos-badge">${p.group}</span>${cap}
+      <img class="ph" src="photos/${p.id}.jpg" alt="${p.ja}" loading="lazy">
+      <div class="info">
+        <div class="nm">${p.ja}</div>
+        <div class="enm">${p.en}</div>
+        <div class="hw">${p.hw || ""}</div>
+      </div>
+    </div>`;
+}
+
+function render() {
+  const main = document.getElementById("main");
+  const shown = PLAYERS.filter(matches);
+  if (shown.length === 0) {
+    main.innerHTML = `<div class="empty">該当する選手が見つかりませんでした</div>`;
+    return;
+  }
+  let html = "";
+  const groups = curPos === "ALL" ? POS_ORDER : [curPos];
+  groups.forEach(g => {
+    const ps = shown.filter(p => p.group === g);
+    if (!ps.length) return;
+    html += `<div class="section-title"><span class="en">${g}</span><span class="jp">${POS_LABELS[g]}（${ps.length}名）</span></div>`;
+    html += `<div class="grid">` + ps.map(cardHTML).join("") + `</div>`;
+  });
+  main.innerHTML = html;
+}
+
+function row(th, td) {
+  return td ? `<tr><th>${th}</th><td>${td}</td></tr>` : "";
+}
+
+function openModal(id) {
+  const p = PLAYERS.find(x => x.id === id);
+  if (!p) return;
+  const a = age(p.birth);
+  const birthDisp = p.birth ? p.birth.replace(/\./g, "/") + (a != null ? `（${a}歳）` : "") : "";
+  const cap = p.id === CAPTAIN_ID ? `<span class="m-cap">CAPTAIN</span>` : "";
+  document.getElementById("modal").innerHTML = `
+    <div class="m-photo"><img src="photos/${p.id}.jpg" alt="${p.ja}"><div class="grad"></div></div>
+    <div class="m-body">
+      <span class="m-pos">${p.group}｜${POS_LABELS[p.group]}</span>${cap}
+      <div class="m-name">${p.ja}</div>
+      <div class="m-en">${p.en}</div>
+      <table class="m-table">
+        ${row("ポジション", p.pos !== p.group ? p.pos : POS_LABELS[p.group])}
+        ${row("生年月日", birthDisp)}
+        ${row("身長/体重", p.hw)}
+        ${row("出身高校", p.hs)}
+        ${row("出身大学", p.univ)}
+        ${row("出身地", p.from)}
+        ${row("代表歴など", p.rep)}
+        ${row("ニックネーム", p.nick)}
+      </table>
+      <a class="m-link" href="https://www.kubota-spears.com/player/detail/${p.id}.php" target="_blank" rel="noopener">公式プロフィールを見る →</a>
+    </div>`;
+  document.getElementById("overlay").classList.add("show");
+  document.body.style.overflow = "hidden";
+}
+
+function closeModal() {
+  document.getElementById("overlay").classList.remove("show");
+  document.body.style.overflow = "";
+}
+document.getElementById("mClose").onclick = closeModal;
+document.getElementById("overlay").onclick = e => { if (e.target.id === "overlay") closeModal(); };
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeModal(); });
+document.getElementById("search").addEventListener("input", e => { query = e.target.value.trim(); render(); });
+
+buildTabs();
+render();
+
+/* ===== News ===== */
+const NEWS_RSS = "https://news.google.com/rss/search?q=%E3%82%AF%E3%83%9C%E3%82%BF%E3%82%B9%E3%83%94%E3%82%A2%E3%83%BC%E3%82%BA&hl=ja&gl=JP&ceid=JP:ja";
+
+function newsItemHTML(n) {
+  const d = n.date ? n.date.slice(5).replace("-", "/") : "";
+  return `<li><a href="${n.link}" target="_blank" rel="noopener">
+    <span class="n-date">${d}</span><span class="n-src">${n.source || ""}</span>
+    <span class="n-title">${n.title}</span></a></li>`;
+}
+
+function renderNews(items) {
+  document.getElementById("newsList").innerHTML =
+    items.slice(0, 8).map(newsItemHTML).join("");
+}
+
+async function loadNews() {
+  try {
+    const res = await fetch("https://api.rss2json.com/v1/api.json?rss_url=" + encodeURIComponent(NEWS_RSS), { signal: AbortSignal.timeout(8000) });
+    const data = await res.json();
+    if (data.status !== "ok" || !data.items || !data.items.length) throw new Error("bad response");
+    const items = data.items.map(it => {
+      let title = it.title || "";
+      let source = "";
+      const i = title.lastIndexOf(" - ");
+      if (i > 0) { source = title.slice(i + 3); title = title.slice(0, i); }
+      return { title, source, link: it.link, date: (it.pubDate || "").slice(0, 10) };
+    });
+    items.sort((a, b) => (b.date || "").localeCompare(a.date || ""));
+    renderNews(items);
+  } catch (e) {
+    renderNews(NEWS_FALLBACK); // ライブ取得失敗時は同梱データを表示
+  }
+}
+loadNews();
+</script>
+</body>
+</html>
