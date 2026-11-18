@@ -237,13 +237,13 @@
 
 <header class="hero">
   <div class="hero-inner">
-    <div class="league">JAPAN RUGBY LEAGUE ONE — DIVISION 1</div>
+    <div class="league">JAPAN RUGBY LEAGUE ONE — DIVISION 1 ／ 2026-27 SEASON</div>
     <h1>クボタスピアーズ船橋・東京ベイ</h1>
     <div class="en-name">KUBOTA SPEARS FUNABASHI TOKYO-BAY</div>
     <p class="lead">
       「土とともに、心をひとつに」。千葉県船橋市・東京ベイエリアをホストエリアとする
       ジャパンラグビー リーグワンの強豪チーム。2022-23シーズンにはリーグワン初優勝を果たした。
-      世界的スターと日本代表クラスがそろう全60選手を紹介！
+      2026-27シーズンの全64選手を紹介！世界的スターと日本代表クラスがそろう。
     </p>
     <div class="facts">
       <div class="fact"><b>創部</b>1978年</div>
@@ -284,7 +284,7 @@
 <footer>
   ファン制作の非公式特設ページです。選手データ・写真の出典：
   <a href="https://www.kubota-spears.com/player/" target="_blank" rel="noopener">クボタスピアーズ公式サイト 選手名鑑</a><br>
-  データ取得日：2026年7月13日
+  データ取得日：2026年11月18日（2026-27シーズン名簿）
 </footer>
 
 <script src="players.js"></script>
@@ -303,7 +303,7 @@ let query = "";
 
 function age(birth) {
   if (!birth) return null;
-  const m = birth.match(/(\d{4})\.(\d{1,2})\.(\d{1,2})/);
+  const m = birth.match(/(\d{4})[.\-\/](\d{1,2})[.\-\/](\d{1,2})/);
   if (!m) return null;
   const b = new Date(+m[1], +m[2]-1, +m[3]);
   const now = new Date();
@@ -379,7 +379,7 @@ function openModal(id) {
   const p = PLAYERS.find(x => x.id === id);
   if (!p) return;
   const a = age(p.birth);
-  const birthDisp = p.birth ? p.birth.replace(/\./g, "/") + (a != null ? `（${a}歳）` : "") : "";
+  const birthDisp = p.birth ? p.birth.replace(/[.\-]/g, "/") + (a != null ? `（${a}歳）` : "") : "";
   const cap = p.id === CAPTAIN_ID ? `<span class="m-cap">CAPTAIN</span>` : "";
   document.getElementById("modal").innerHTML = `
     <div class="m-photo"><img src="photos/${p.id}.jpg" alt="${p.ja}"><div class="grad"></div></div>
