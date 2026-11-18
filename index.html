@@ -75,6 +75,35 @@
   .news-note { font-size: 11px; color: var(--gray); margin-top: 10px; text-align: right; }
   .news-loading { color: var(--gray); font-size: 13px; padding: 10px 4px; }
 
+  /* ===== Transfers ===== */
+  .tr-sec { background: #fff; border-bottom: 1px solid #e1e5ef; }
+  .tr-inner { max-width: 1100px; margin: 0 auto; padding: 22px 16px 26px; }
+  .tr-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .tr-box h3 {
+    font-size: 13px; letter-spacing: .08em; margin-bottom: 8px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .tr-box h3::before { content: ""; width: 4px; height: 15px; border-radius: 2px; }
+  .tr-in h3::before { background: var(--orange); }
+  .tr-out h3::before { background: var(--gray); }
+  .tr-box h3 .cnt { font-size: 11.5px; color: var(--gray); font-weight: normal; }
+  .tr-list { list-style: none; }
+  .tr-list li {
+    display: flex; align-items: baseline; gap: 10px;
+    padding: 8px 2px; border-bottom: 1px dashed #e1e5ef; font-size: 13.5px;
+  }
+  .tr-pos {
+    font-size: 10.5px; font-weight: bold; color: #fff; background: var(--navy);
+    border-radius: 4px; padding: 2px 7px; white-space: nowrap; min-width: 46px; text-align: center;
+  }
+  .tr-out .tr-pos { background: var(--gray); }
+  .tr-name { font-weight: bold; }
+  .tr-from { font-size: 11.5px; color: var(--gray); }
+  .tr-list a { text-decoration: none; }
+  .tr-list a:hover .tr-name { color: var(--orange); text-decoration: underline; }
+  .tr-note { font-size: 12px; color: #5a6584; margin-top: 12px; line-height: 1.9; }
+  .tr-note b { color: var(--orange); }
+
   /* ===== Filter bar ===== */
   .toolbar {
     position: sticky; top: 0; z-index: 50;
@@ -211,6 +240,7 @@
   footer a { color: var(--orange-light); }
 
   @media (max-width: 620px) {
+    .tr-cols { grid-template-columns: 1fr; gap: 18px; }
     .hero { padding: 36px 18px 28px; }
     .hero p.lead { font-size: 13.5px; }
     .fact { font-size: 12px; padding: 6px 12px; }
@@ -265,6 +295,23 @@
   </div>
 </section>
 
+<section class="tr-sec">
+  <div class="tr-inner">
+    <div class="section-title"><span class="en">TRANSFERS</span><span class="jp">今季の主な動き</span></div>
+    <div class="tr-cols">
+      <div class="tr-box tr-in">
+        <h3>IN ／ 新加入 <span class="cnt" id="trInCount"></span></h3>
+        <ul class="tr-list" id="trIn"></ul>
+      </div>
+      <div class="tr-box tr-out">
+        <h3>OUT ／ 前シーズン終了後に退団 <span class="cnt" id="trOutCount"></span></h3>
+        <ul class="tr-list" id="trOut"></ul>
+      </div>
+    </div>
+    <div class="tr-note" id="trNote"></div>
+  </div>
+</section>
+
 <nav class="toolbar">
   <div class="toolbar-inner">
     <div class="tabs" id="tabs"></div>
@@ -288,6 +335,7 @@
 </footer>
 
 <script src="players.js"></script>
+<script src="transfers.js"></script>
 <script src="news.js"></script>
 <script>
 const POS_LABELS = {
@@ -411,6 +459,32 @@ document.getElementById("mClose").onclick = closeModal;
 document.getElementById("overlay").onclick = e => { if (e.target.id === "overlay") closeModal(); };
 document.addEventListener("keydown", e => { if (e.key === "Escape") closeModal(); });
 document.getElementById("search").addEventListener("input", e => { query = e.target.value.trim(); render(); });
+/* ---------- 今季の主な動き ---------- */
+function renderTransfers() {
+  if (typeof TRANSFERS === "undefined") return;
+  const esc = s => String(s == null ? "" : s).replace(/[&<>"]/g, c =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+  // 新加入はクリックでその選手のプロフィールを開く
+  document.getElementById("trIn").innerHTML = TRANSFERS.in.map(t => {
+    const body = `<span class="tr-pos">${esc(t.pos)}</span>
+      <span><span class="tr-name">${esc(t.name)}</span>
+      ${t.from ? `<span class="tr-from">　← ${esc(t.from)}</span>` : ""}</span>`;
+    return t.id && PLAYERS.some(p => p.id === t.id)
+      ? `<li><a href="javascript:void(0)" onclick="openModal('${esc(t.id)}')">${body}</a></li>`
+      : `<li>${body}</li>`;
+  }).join("");
+
+  document.getElementById("trOut").innerHTML = TRANSFERS.out.map(t =>
+    `<li><span class="tr-pos">${esc(t.pos)}</span><span class="tr-name">${esc(t.name)}</span></li>`).join("");
+
+  document.getElementById("trInCount").textContent = TRANSFERS.in.length + "名";
+  document.getElementById("trOutCount").textContent = TRANSFERS.out.length + "名";
+  document.getElementById("trNote").innerHTML =
+    (TRANSFERS.notes || []).map(n => "※ " + esc(n)).join("<br>");
+}
+renderTransfers();
+
 
 buildTabs();
 render();
