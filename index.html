@@ -273,7 +273,7 @@
     <p class="lead">
       「土とともに、心をひとつに」。千葉県船橋市・東京ベイエリアをホストエリアとする
       ジャパンラグビー リーグワンの強豪チーム。2022-23シーズンにはリーグワン初優勝を果たした。
-      2026-27シーズンの全64選手を紹介！世界的スターと日本代表クラスがそろう。
+      2026-27シーズンの全63選手を紹介！世界的スターと日本代表クラスがそろう。
     </p>
     <div class="facts">
       <div class="fact"><b>創部</b>1978年</div>
@@ -304,7 +304,7 @@
         <ul class="tr-list" id="trIn"></ul>
       </div>
       <div class="tr-box tr-out">
-        <h3>OUT ／ 前シーズン終了後に退団 <span class="cnt" id="trOutCount"></span></h3>
+        <h3>OUT ／ 退団・移籍 <span class="cnt" id="trOutCount"></span></h3>
         <ul class="tr-list" id="trOut"></ul>
       </div>
     </div>
@@ -476,7 +476,7 @@ function renderTransfers() {
   }).join("");
 
   document.getElementById("trOut").innerHTML = TRANSFERS.out.map(t =>
-    `<li><span class="tr-pos">${esc(t.pos)}</span><span class="tr-name">${esc(t.name)}</span></li>`).join("");
+    `<li><span class="tr-pos">${esc(t.pos)}</span><span><span class="tr-name">${esc(t.name)}</span>${t.to ? `<span class="tr-from">　→ ${esc(t.to)}</span>` : ""}</span></li>`).join("");
 
   document.getElementById("trInCount").textContent = TRANSFERS.in.length + "名";
   document.getElementById("trOutCount").textContent = TRANSFERS.out.length + "名";
